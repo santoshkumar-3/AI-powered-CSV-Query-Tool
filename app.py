@@ -36,7 +36,7 @@ if uploaded_files:
     agent = create_csv_agent(llm_model, path=csv_paths, verbose=True, allow_dangerous_code=True)
 
     # Input box for asking questions related to the CSV data
-    st.subheader("Ask a Question About Your Inventory Data")
+    st.subheader("Ask a Question")
     user_query = st.text_input("Enter your question:")
 
     # Query the agent and display the result when the user inputs a query

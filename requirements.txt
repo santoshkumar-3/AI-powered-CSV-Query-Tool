@@ -19,3 +19,4 @@ faiss-cpu
 sentence_transformers
 youtube_search
 tabulate
+streamlit==1.24.0

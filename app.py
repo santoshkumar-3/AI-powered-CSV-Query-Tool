@@ -33,7 +33,7 @@ if uploaded_files:
             csv_paths.append(temp_file.name)
 
     # Create the CSV agent using LangChain's agent toolkit
-    agent = create_csv_agent(llm_model, path=csv_paths, verbose=True, allow_dangerous_code=True)
+    agent = create_csv_agent(llm_model, path=csv_paths, verbose=True, allow_dangerous_code=True, pandas_kwargs={'encoding': 'latin-1'})
 
     # Input box for asking questions related to the CSV data
     st.subheader("Ask a Question")

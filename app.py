@@ -5,14 +5,17 @@ import tempfile
 from langchain_experimental.agents.agent_toolkits import create_csv_agent
 from dotenv import load_dotenv
 import os
+import tabulate
+import pandas as pd
+from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+# Import create_csv_agent from langchain_experimental.agents instead of langchain.agents
+from langchain_experimental.agents import create_csv_agent 
+from langchain.agents.agent_types import AgentType
 
 load_dotenv()
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-# Initialize the ChatOpenAI model
-llm_model = ChatOpenAI(model="gpt-4o", temperature=0, openai_api_key=OPENAI_API_KEY)
-
+OPENAI_API_KEY = os.getenv("OPENAI_API")
 # Title for the Streamlit app
 st.title("AI-powered CSV Query Tool")
 
@@ -33,17 +36,28 @@ if uploaded_files:
             csv_paths.append(temp_file.name)
 
     # Create the CSV agent using LangChain's agent toolkit
-    agent = create_csv_agent(llm_model, path=csv_paths, verbose=True, allow_dangerous_code=True)
+    # agent = create_csv_agent(llm_model, path=csv_paths, verbose=True, allow_dangerous_code=True, pandas_kwargs={'encoding': 'latin-1'})
+    print("path: ", csv_paths)
+    csv_agent = create_csv_agent(
+        ChatOpenAI(temperature=0.7, model="gpt-4o-mini", openai_api_key=OPENAI_API_KEY),
+        csv_paths,
+        verbose=True,
+        stop=["\nObservation:"],
+        agent_type=AgentType.OPENAI_FUNCTIONS,
+        handle_parsing_errors=True,
+        allow_dangerous_code=True,
+        pandas_kwargs={'encoding': 'latin-1'}
+    )
 
     # Input box for asking questions related to the CSV data
-    st.subheader("Ask a Question About Your Inventory Data")
-    user_query = st.text_input("Enter your question:")
+    st.subheader("Ask a Question about the CSV Data")
+    user_query = st.text_area("Enter your question:")
 
     # Query the agent and display the result when the user inputs a query
     if st.button("Ask"):
         if user_query:
             # Invoke the agent with the user's query
-            response = agent.invoke(user_query)
+            response = csv_agent.run(user_query)
             
             # Display the response
             st.write("### Answer:")

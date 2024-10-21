@@ -19,3 +19,8 @@ faiss-cpu
 sentence_transformers
 youtube_search
 tabulate
+langchain
+openai
+tabulate
+pandas
+langchain_experimental

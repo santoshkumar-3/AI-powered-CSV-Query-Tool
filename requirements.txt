@@ -24,3 +24,4 @@ openai
 tabulate
 pandas
 langchain_experimental
+streamlit==1.23.1

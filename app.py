@@ -19,6 +19,12 @@ OPENAI_API_KEY = os.getenv("OPENAI_API")
 # Title for the Streamlit app
 st.title("AI-powered CSV Query Tool")
 
+dtype = {
+    'column_name_1': 'str',  # Specify the column data type
+    'column_name_2': 'float',
+    # Add more columns here as necessary
+}
+
 # Upload CSV files through Streamlit
 st.subheader("Upload your CSV Files")
 uploaded_files = st.file_uploader("Upload CSV files", accept_multiple_files=True, type=["csv"])
@@ -39,14 +45,18 @@ if uploaded_files:
     # agent = create_csv_agent(llm_model, path=csv_paths, verbose=True, allow_dangerous_code=True, pandas_kwargs={'encoding': 'latin-1'})
     print("path: ", csv_paths)
     csv_agent = create_csv_agent(
-        ChatOpenAI(temperature=0.7, model="gpt-4o-mini", openai_api_key=OPENAI_API_KEY),
+        ChatOpenAI(temperature=0.7, model="gpt-4o", openai_api_key=OPENAI_API_KEY),
         csv_paths,
         verbose=True,
         stop=["\nObservation:"],
         agent_type=AgentType.OPENAI_FUNCTIONS,
         handle_parsing_errors=True,
         allow_dangerous_code=True,
-        pandas_kwargs={'encoding': 'latin-1'}
+        pandas_kwargs={
+            'na_filter': False,  # Disable filtering of missing values
+            'low_memory': False,
+            'encoding': 'latin-1'
+            }
     )
 
     # Input box for asking questions related to the CSV data

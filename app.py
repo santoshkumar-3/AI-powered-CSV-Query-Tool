@@ -45,9 +45,9 @@ if uploaded_files:
     # agent = create_csv_agent(llm_model, path=csv_paths, verbose=True, allow_dangerous_code=True, pandas_kwargs={'encoding': 'latin-1'})
     print("path: ", csv_paths)
     csv_agent = create_csv_agent(
-        ChatOpenAI(temperature=0.7, model="gpt-4o", openai_api_key=OPENAI_API_KEY),
+        ChatOpenAI(temperature=0.5, model="gpt-4o", openai_api_key=OPENAI_API_KEY),
         csv_paths,
-        verbose=True,
+        verbose=False,
         stop=["\nObservation:"],
         agent_type=AgentType.OPENAI_FUNCTIONS,
         handle_parsing_errors=True,
